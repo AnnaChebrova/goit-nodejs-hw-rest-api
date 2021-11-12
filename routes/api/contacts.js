@@ -1,111 +1,18 @@
 const express = require('express')
-const { NotFound, BadRequest } = require('http-errors')
-const Joi = require('joi')
+const { contacts: ctrl } = require('../../controllers')
 
-const contactsOperations = require('../../model/contacts')
+const { joiContactsSchema, validation } = require('../../middlewares')
 
-const joiSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().email({
-    minDomainSegments: 2,
-    tlds: { allow: ['com', 'net'] },
-  }),
-})
 const router = express.Router()
 
-router.get('/', async (req, res, next) => {
-  try {
-    const contacts = await contactsOperations.getAll()
-    res.json(contacts)
-  } catch (error) {
-    next(error)
-  }
-})
+router.get('/', ctrl.getAll)
 
-router.get('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params
-    const result = await contactsOperations.getById(id)
-    if (!result) {
-      throw new NotFound(`Contact with id=${id} not found`)
-      // const error = new Error(`Contact with id=${id} not found`)
-      // error.status = 404
-      // throw error
+router.get('/:id', ctrl.getById)
 
-      // // res.status(404).json({
-      //   status: 'error',
-      //   code: 404,
-      //   message: `Contact with id=${id} not found`
-      // })
-      // return
-    }
-    res.json({
-      status: 'success',
-      code: 200,
-      data: { result },
-    })
-  } catch (error) {
-    next(error)
-  }
-})
+router.post('/', validation(joiContactsSchema), ctrl.add)
 
-router.post('/', async (req, res, next) => {
-  try {
-    const { error } = joiSchema.validate(req.body)
-    if (error) {
-      throw new BadRequest(error.message)
-    }
-    const result = await contactsOperations.add(req.body)
-    res.status(201).json({
-      status: 'success',
-      code: 201,
-      data: {
-        result,
-      },
-    })
-  } catch (error) {
-    next(error)
-  }
-})
+router.put('/:id', validation(joiContactsSchema), ctrl.updateById)
 
-router.put('/:id', async (req, res, next) => {
-  try {
-    const { error } = joiSchema.validate(req.body)
-    if (error) {
-      throw new BadRequest(error.message)
-    }
-    const { id } = req.params
-    const result = await contactsOperations.updateById(id, req.body)
-    if (!result) {
-      throw new NotFound(`Contact with id=${id} not found`)
-    }
-    res.json({
-      status: 'success',
-      code: 200,
-      data: {
-        result,
-      },
-    })
-  } catch (error) {
-    next(error)
-  }
-})
-
-router.delete('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params
-    const result = await contactsOperations.removeById(id)
-    if (!result) {
-      throw new NotFound(`Contact with id=${id} not found`)
-    }
-    res.json({
-      status: 'success',
-      code: 200,
-      message: 'Remove success',
-    })
-  } catch (error) {
-    next(error)
-  }
-})
+router.delete('/:id', ctrl.remoweById)
 
 module.exports = router
