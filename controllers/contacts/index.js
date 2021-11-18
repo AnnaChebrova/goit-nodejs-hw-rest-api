@@ -4,4 +4,10 @@ const add = require('./add')
 const updateById = require('./updateById')
 const remoweById = require('./removeById')
 
-module.exports = { getAll, getById, add, updateById, remoweById }
+module.exports = {
+  getAll,
+  getById,
+  add,
+  updateById,
+  remoweById,
+}

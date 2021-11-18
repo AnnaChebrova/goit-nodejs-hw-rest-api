@@ -1,4 +1,3 @@
-
 const validation = (schema) => {
   const validationMiddleware = (req, res, next) => {
     const { error } = schema.validate(req.body)
