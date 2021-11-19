@@ -1,6 +1,10 @@
 const validation = require('./validation')
-const joiContactsSchema = require('./addContactValidation')
+const controllerWrapper = require('./controllerWrapper')
+
+const joiContactsSchema = require('./validation')
 
 module.exports = {
-  validation, joiContactsSchema
+  validation,
+  controllerWrapper,
+  joiContactsSchema,
 }
