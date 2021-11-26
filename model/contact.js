@@ -14,6 +14,10 @@ const contactSchema = Schema({
     type: Number,
     match: patternRegExp,
   },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+  }
 })
 
 const joiContactsSchema = Joi.object({
