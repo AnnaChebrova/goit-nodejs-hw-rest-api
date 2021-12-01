@@ -17,11 +17,11 @@ const authenticate = async (req, res, next) => {
       if (!user) {
         throw new NotFound('User not found')
       }
-      if (!user.token) {
-        throw new Unauthorized()
-      }
+      // if (!user.token) {
+      //   throw new Unauthorized()
+      // }
       req.user = user
-      console.log(user)
+      // console.log(user)
       next()
     } catch (error) {
       throw new Unauthorized(error.message)
