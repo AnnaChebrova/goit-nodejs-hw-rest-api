@@ -3,17 +3,17 @@ const path = require('path')
 const { NotFound } = require('http-errors')
 const { ContactModel } = require('../../model')
 
-const contactsDir = path.join(__dirname, '../../publik/contacts')
+const contactsDir = path.join(__dirname, '../../public/contacts')
 console.log(contactsDir)
 
 const updateImage = async (req, res) => {
   const { id } = req.params
-  const { path: tempUpload, originalName } = req.file
+  const { path: tempUpload, originalname } = req.file
 
   try {
-    const resultUpload = path.join(contactsDir, originalName)
+    const resultUpload = path.join(contactsDir, id, `${id}_${originalname}`)
     await fs.rename(tempUpload, resultUpload)
-    const image = path.join('/contacts', originalName)
+    const image = path.join('/contacts', id, `${id}_${originalname}`)
     const result = await ContactModel.findByIdAndUpdate(
       id,
       { image },
