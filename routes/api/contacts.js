@@ -5,6 +5,7 @@ const {
   validation,
   authenticate,
   controllerWrapper,
+  upload,
 } = require('../../middlewares')
 
 const { joiContactsSchema } = require('../../model/contact')
@@ -28,6 +29,8 @@ router.put(
   validation(joiContactsSchema),
   controllerWrapper(ctrl.updateById),
 )
+
+router.patch('/:id/image', upload.single('image'), controllerWrapper(ctrl.updateImage))
 
 router.delete('/:id', controllerWrapper(ctrl.remoweById))
 
